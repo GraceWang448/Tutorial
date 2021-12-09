@@ -30,7 +30,7 @@ public class Mechanisms {
         //  Hardware mapping: DcMotorEx
         intake = hardwareMap.get(DcMotorEx.class, "intake");
 
-        //  Hardware mapping: CRServo
+        // Hardware mapping: CRServo
 
         //  Hardware mapping: Servo
 
