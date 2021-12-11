@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.nextcore.Mechanisms;
@@ -16,6 +17,8 @@ import org.firstinspires.ftc.teamcode.nextcore.Mechanisms;
 public class CoolRanch extends LinearOpMode {
 
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+
+    public static double DRIVE_WEIGHT = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -33,22 +36,25 @@ public class CoolRanch extends LinearOpMode {
         rightRear.setDirection(DcMotorSimple.Direction.FORWARD);
 
         Mechanisms mech = new Mechanisms(hardwareMap);
-        
+
+        leftFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         telemetry.addLine("Ready to start");
         telemetry.update();
         waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
 
+            double forward = gamepad1.left_stick_y;
+            double strafe = -gamepad1.left_stick_x;
+            double turn = gamepad1.right_stick_x;
 
-            double forward = -gamepad1.left_stick_y;
-            double turn = -gamepad1.left_stick_x;
-            double strafe = -gamepad1.right_stick_x;
-
-            leftFront.setPower(forward + turn + strafe);
-            rightFront.setPower(forward - turn - strafe);
-            leftRear.setPower(forward + turn - strafe);
-            rightRear.setPower(forward - turn + strafe);
+            leftFront.setPower(Range.clip(forward + turn + strafe, -DRIVE_WEIGHT, DRIVE_WEIGHT));
+            rightFront.setPower(Range.clip(forward - turn - strafe, -DRIVE_WEIGHT, DRIVE_WEIGHT));
+            leftRear.setPower(Range.clip(forward + turn - strafe, -DRIVE_WEIGHT, DRIVE_WEIGHT));
+            rightRear.setPower(Range.clip(forward - turn + strafe, -DRIVE_WEIGHT, DRIVE_WEIGHT));
 
 
             // Gamepad 2 - Atharv
