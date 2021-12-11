@@ -18,7 +18,8 @@ public class CoolRanch extends LinearOpMode {
 
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
 
-    public static double DRIVE_WEIGHT = 0.5;
+    public static double DRIVE_WEIGHT = 1;
+    public static double DRIVE_WEIGHT2 = 0.15;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -86,6 +87,20 @@ public class CoolRanch extends LinearOpMode {
             } else {
                 mech.runDuckSpin(Mechanisms.duckSpinState.OFF);
             }
+            if (gamepad2.b) {
+                mech.duckSpin.setPower(-1);
+            } else {
+                mech.runDuckSpin(Mechanisms.duckSpinState.OFF);
+            }
+
+            double forward2 = gamepad2.left_stick_y;
+            double strafe2 = -gamepad2.left_stick_x;
+            double turn2 = gamepad2.right_stick_x;
+
+            leftFront.setPower(Range.clip(forward2 + turn2 + strafe2, -DRIVE_WEIGHT2, DRIVE_WEIGHT2));
+            rightFront.setPower(Range.clip(forward2 - turn2 - strafe2, -DRIVE_WEIGHT2, DRIVE_WEIGHT2));
+            leftRear.setPower(Range.clip(forward2 + turn2 - strafe2, -DRIVE_WEIGHT2, DRIVE_WEIGHT2));
+            rightRear.setPower(Range.clip(forward2 - turn2 + strafe2, -DRIVE_WEIGHT2, DRIVE_WEIGHT2));
         }
     }
 }
