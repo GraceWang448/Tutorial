@@ -33,7 +33,7 @@ public class Mechanisms {
     }
 
     public enum slideState {
-        FIRST, SECOND, THIRD
+        TOP, MIDDLE, BOTTOM
     }
 
     public enum duckSpinState {
@@ -47,9 +47,9 @@ public class Mechanisms {
     private static final double OFF_POWER = 0;
 
     // Tick Values
-    public static int FIRST_LEVEL = 0;
-    public static int SECOND_LEVEL = 500;
-    public static int THIRD_LEVEL = 1000;
+    public static int TOP_LEVEL = 1000;
+    public static int MIDDLE_LEVEL = 500;
+    public static int BOTTOM_LEVEL = 0;
 
     public static double OBJECT_OPEN = 0.2;
     public static double OBJECT_CLOSE = 0.1;
@@ -119,19 +119,19 @@ public class Mechanisms {
     // Runs Slides
     public void runSlides(slideState state) {
         switch (state) {
-            case FIRST:
-                runSlidePosition(FIRST_LEVEL);
+            case TOP:
+                runSlidePosition(TOP_LEVEL);
                 break;
-            case SECOND:
-                runSlidePosition(SECOND_LEVEL);
+            case MIDDLE:
+                runSlidePosition(MIDDLE_LEVEL);
                 break;
-            case THIRD:
-                runSlidePosition(THIRD_LEVEL);
+            case BOTTOM:
+                runSlidePosition(BOTTOM_LEVEL);
         }
     }
 
     // Sub function for run to position for slides
-    public void runSlidePosition(int ticks) {
+    private void runSlidePosition(int ticks) {
         leftSlide.setTargetPosition(ticks);
         rightSlide.setTargetPosition(ticks);
 

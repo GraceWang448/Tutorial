@@ -32,23 +32,10 @@ public class CoolRanch extends LinearOpMode {
         Mechanisms mech = new Mechanisms(hardwareMap);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        Pose2d startPose = new Pose2d(RED_ENDING_X, RED_ENDING_Y, Math.toRadians(0));
         waitForStart();
         while (opModeIsActive() && !isStopRequested()) {
             drive.update();
-//
-//            // Read pose
-//            Pose2d poseEstimate = drive.getPoseEstimate();
-//
-//            // Print pose to telemetry
-//            telemetry.addData("mode", currentMode);
-//            telemetry.addData("x", poseEstimate.getX());
-//            telemetry.addData("y", poseEstimate.getY());
-//            telemetry.addData("heading", poseEstimate.getHeading());
-//            telemetry.update();
-
-
-            // Gamepad 1 -
+            // Gamepad 1 - Michael
             drive.setWeightedDrivePower(
                     new Pose2d(
                             -gamepad1.left_stick_y,
@@ -57,7 +44,23 @@ public class CoolRanch extends LinearOpMode {
                     )
             );
 
-            // Gamepad 2 - Michael
+
+            // Gamepad 2 - Atharv
+            // Intake
+            if (gamepad2.left_trigger > 0) mech.runIntake(Mechanisms.intakeState.IN);
+            if (gamepad2.right_trigger > 0) mech.runIntake(Mechanisms.intakeState.OUT);
+
+            // Unlock Object
+            if(gamepad2.left_bumper) mech.unlockControl(Mechanisms.objectUnlockState.OPEN);
+            if(gamepad2.right_bumper) mech.unlockControl(Mechanisms.objectUnlockState.CLOSE);
+
+            // Slides
+            if (gamepad2.dpad_up) mech.runSlides(Mechanisms.slideState.TOP);
+            if (gamepad2.dpad_left || gamepad2.dpad_right) mech.runSlides(Mechanisms.slideState.MIDDLE);
+            if (gamepad2.dpad_down) mech.runSlides(Mechanisms.slideState.BOTTOM);
+
+            // Ducks
+            if(gamepad2.a) mech.runDuckSpin(Mechanisms.duckSpinState.ON);
         }
     }
 }
