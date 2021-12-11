@@ -43,16 +43,16 @@ public class Mechanisms {
     // Power Values
     public static double INTAKE_POWER = 0.7;
     public static double SPIN_POWER = 1;
-    public static double SLIDE_VELOCITY = 100; // ticks per second
+    public static double SLIDE_VELOCITY = 500; // ticks per second
     private static final double OFF_POWER = 0;
 
     // Tick Values
-    public static int TOP_LEVEL = 1000;
-    public static int MIDDLE_LEVEL = 500;
+    public static int TOP_LEVEL = 1800;
+    public static int MIDDLE_LEVEL = 1100;
     public static int BOTTOM_LEVEL = 0;
 
-    public static double OBJECT_OPEN = 0.2;
-    public static double OBJECT_CLOSE = 0.1;
+    public static double OBJECT_OPEN = 0.9;
+    public static double OBJECT_CLOSE = 0.7;
 
 
     // Constructor
@@ -75,7 +75,6 @@ public class Mechanisms {
         // Set Encoders
         leftSlide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         rightSlide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
     }
 
     // Runs intake dependent on given state
