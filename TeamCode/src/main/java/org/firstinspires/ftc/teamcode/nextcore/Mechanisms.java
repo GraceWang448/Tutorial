@@ -32,6 +32,10 @@ public class Mechanisms {
         DOWN, UP, RESET, BACK
     }
 
+    public enum boxState {
+      UP, DOWN
+    }
+
     public enum duckSpinState {
         ON, OFF
     }
@@ -53,6 +57,9 @@ public class Mechanisms {
 
     public static int ARM_DOWN = 0;
     public static int ARM_UP = 500;
+
+    public static double BOX_DOWN_POSITION = 0;
+    public static double BOX_UP_POSITION = 0;
 
     public Mechanisms(HardwareMap hardwareMap) {
 
@@ -118,6 +125,15 @@ public class Mechanisms {
             case UP:
             case BACK:
                 runArmPosition(ARM_UP);
+        }
+    }
+
+    public void moveBox(boxState state) {
+        switch (state) {
+            case DOWN:
+                box.setPosition(BOX_DOWN_POSITION);
+            case UP:
+                box.setPosition(BOX_UP_POSITION);
         }
     }
 
