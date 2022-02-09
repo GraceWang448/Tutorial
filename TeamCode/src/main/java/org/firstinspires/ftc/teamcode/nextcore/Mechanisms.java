@@ -33,7 +33,7 @@ public class Mechanisms {
     }
 
     public enum boxState {
-      UP, DOWN
+        UP, DOWN
     }
 
     public enum duckSpinState {
@@ -44,7 +44,7 @@ public class Mechanisms {
         LEFT, RIGHT
     }
 
-    public static double INTAKE_POWER = 0.7;
+    public static double INTAKE_POWER = 1;
     public static double TURRET_VELOCITY = 0.7; // ticks per second
     public static double ARM_VELOCITY = 0.7; // ticks per second
     public static double OFF_POWER = 0;
@@ -80,28 +80,47 @@ public class Mechanisms {
         switch (state) {
             case IN:
                 intake.setPower(INTAKE_POWER);
+                break;
             case OUT:
                 intake.setPower(-INTAKE_POWER);
+                break;
             case OFF:
                 intake.setPower(OFF_POWER);
         }
     }
 
+
     public void runDuckSpin(duckSpinState state, duckSpinSide side) {
-       switch(side) {
-           case LEFT: switch (state) {
-               case ON:
-                   leftDuck.setPower(SPIN_POWER);
-               case OFF:
-                   leftDuck.setPower(OFF_POWER);
-           }
-           case RIGHT: switch (state) {
-               case ON:
-                   rightDuck.setPower(SPIN_POWER);
-               case OFF:
-                   rightDuck.setPower(OFF_POWER);
-           }
-       }
+     if(state == duckSpinState.ON) {
+         if (side == duckSpinSide.LEFT) {
+             spin(state,leftDuck);
+         }
+
+         if (side == duckSpinSide.RIGHT) {
+             spin(state,rightDuck);
+         }
+     }
+
+        if(state == duckSpinState.OFF) {
+            if (side == duckSpinSide.LEFT) {
+                spin(state,leftDuck);
+            }
+
+            if (side == duckSpinSide.RIGHT) {
+                spin(state,rightDuck);
+            }
+        }
+    }
+
+    private void spin(duckSpinState state, CRServo servo) {
+        switch (state) {
+            case ON:
+                servo.setPower(SPIN_POWER);
+                break;
+            case OFF:
+                servo.setPower(SPIN_POWER);
+                break;
+        }
     }
 
     public void turnTurret(turretState state) {
@@ -141,11 +160,11 @@ public class Mechanisms {
 //        turret.setTargetPosition(ticks);
 //        turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        turret.setVelocity(TURRET_VELOCITY);
-        runToPosition(ticks,turret,TURRET_VELOCITY);
+        runToPosition(ticks, turret, TURRET_VELOCITY);
     }
 
     private void runArmPosition(int ticks) {
-        runToPosition(ticks,arm,ARM_VELOCITY);
+        runToPosition(ticks, arm, ARM_VELOCITY);
     }
 
     private void runToPosition(int ticks, DcMotorEx motor, double velocity) {
@@ -158,6 +177,7 @@ public class Mechanisms {
         double currentTime = runtime.milliseconds();
         double waitUntil = currentTime + milliseconds;
 
-        while(runtime.milliseconds() < waitUntil) {}
+        while (runtime.milliseconds() < waitUntil) {
+        }
     }
 }

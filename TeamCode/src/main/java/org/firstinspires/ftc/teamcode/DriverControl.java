@@ -41,6 +41,8 @@ public class DriverControl extends LinearOpMode {
                 mech.runIntake(Mechanisms.intakeState.IN);
             } else if (gamepad1.b) {
                 mech.runIntake(Mechanisms.intakeState.OUT);
+            } else if (gamepad1.x) {
+                mech.runIntake(Mechanisms.intakeState.OFF);
             }
 
             if (gamepad1.left_bumper) {

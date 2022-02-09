@@ -18,8 +18,13 @@ public class IntakeTest extends LinearOpMode {
         while (opModeIsActive()) {
             if (gamepad1.a) {
                 mech.runIntake(Mechanisms.intakeState.IN);
-            } else if (gamepad1.b) {
+            } else {
+                mech.runIntake(Mechanisms.intakeState.OFF);
+            }
+            if (gamepad1.b) {
                 mech.runIntake(Mechanisms.intakeState.OUT);
+            } else {
+                mech.runIntake(Mechanisms.intakeState.OFF);
             }
         }
     }

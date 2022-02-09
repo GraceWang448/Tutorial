@@ -18,8 +18,14 @@ public class DuckTest extends LinearOpMode {
         while (opModeIsActive()) {
             if (gamepad1.left_bumper) {
                 mech.runDuckSpin(Mechanisms.duckSpinState.ON, Mechanisms.duckSpinSide.LEFT);
-            } else if (gamepad1.right_bumper) {
+            } else {
+                mech.runDuckSpin(Mechanisms.duckSpinState.OFF, Mechanisms.duckSpinSide.LEFT);
+            }
+
+            if (gamepad1.right_bumper) {
                 mech.runDuckSpin(Mechanisms.duckSpinState.ON, Mechanisms.duckSpinSide.RIGHT);
+            } else {
+                mech.runDuckSpin(Mechanisms.duckSpinState.OFF, Mechanisms.duckSpinSide.RIGHT);
             }
         }
     }
