@@ -39,35 +39,56 @@ public class DriverControl extends LinearOpMode {
 
             if (gamepad1.a) {
                 mech.runIntake(Mechanisms.intakeState.IN);
-            } else if (gamepad1.b) {
+            } else {
+                mech.runIntake(Mechanisms.intakeState.OFF);
+            }
+            if (gamepad1.b) {
                 mech.runIntake(Mechanisms.intakeState.OUT);
-            } else if (gamepad1.x) {
+            } else {
                 mech.runIntake(Mechanisms.intakeState.OFF);
             }
 
             if (gamepad1.left_bumper) {
                 mech.runDuckSpin(Mechanisms.duckSpinState.ON, Mechanisms.duckSpinSide.LEFT);
-            } else if (gamepad1.right_bumper) {
-                mech.runDuckSpin(Mechanisms.duckSpinState.ON, Mechanisms.duckSpinSide.RIGHT);
+            }  else {
+                mech.runDuckSpin(Mechanisms.duckSpinState.OFF,Mechanisms.duckSpinSide.LEFT);
             }
+
+            if (gamepad1.right_bumper) {
+                mech.runDuckSpin(Mechanisms.duckSpinState.ON, Mechanisms.duckSpinSide.RIGHT);
+            } else {
+                mech.runDuckSpin(Mechanisms.duckSpinState.OFF,Mechanisms.duckSpinSide.RIGHT);
+            }
+
 
             // Gamepad 2 - Mechanisms
             if (gamepad2.dpad_up) {
                 mech.turnTurret(Mechanisms.turretState.FRONT);
-            } else if (gamepad2.dpad_right) {
+            }
+            if (gamepad2.dpad_right) {
                 mech.turnTurret(Mechanisms.turretState.RIGHT);
-            } else if (gamepad2.dpad_down) {
+            }
+            if (gamepad2.dpad_down) {
                 mech.turnTurret(Mechanisms.turretState.BACK);
-            } else if (gamepad2.dpad_left) {
+            }
+            if (gamepad2.dpad_left) {
                 mech.turnTurret(Mechanisms.turretState.LEFT);
             }
 
-            if (gamepad2.y) {
-                mech.moveArm(Mechanisms.armState.DOWN);
-            } else if (gamepad2.a) {
-                mech.moveArm(Mechanisms.armState.UP);
+            if (gamepad2.a) {
+                mech.moveArm(Mechanisms.armState.INITIAL);
             }
 
+            if(gamepad2.y) {
+                mech.moveArm(Mechanisms.armState.TOP);
+            }
+            if(gamepad2.x) {
+                mech.moveArm(Mechanisms.armState.MIDDLE);
+            }
+
+            if(gamepad2.b) {
+                mech.moveArm(Mechanisms.armState.BOTTOM);
+            }
 
         }
     }

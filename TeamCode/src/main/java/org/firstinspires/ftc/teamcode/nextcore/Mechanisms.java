@@ -29,7 +29,7 @@ public class Mechanisms {
     }
 
     public enum armState {
-        DOWN, UP, RESET, BACK
+     INITIAL,TOP,MIDDLE,BOTTOM
     }
 
     public enum boxState {
@@ -45,18 +45,20 @@ public class Mechanisms {
     }
 
     public static double INTAKE_POWER = 1;
-    public static double TURRET_VELOCITY = 0.7; // ticks per second
-    public static double ARM_VELOCITY = 0.7; // ticks per second
+    public static double TURRET_VELOCITY = 900; // ticks per second
+    public static double ARM_VELOCITY = 900; // ticks per second
     public static double OFF_POWER = 0;
     public static double SPIN_POWER = 1;
 
     public static int TURRET_FRONT = 0;
-    public static int TURRET_RIGHT = 500;
-    public static int TURRET_LEFT = 1500;
-    public static int TURRET_BACK = 1000;
+    public static int TURRET_RIGHT = -258;
+    public static int TURRET_LEFT = 269; // -806 if you want other way around
+    public static int TURRET_BACK = -537;
 
-    public static int ARM_DOWN = 0;
-    public static int ARM_UP = 500;
+    public static int ARM_INITIAL = 0;
+    public static int ARM_TOP = 614;
+    public static int ARM_MIDDLE = 748;
+    public static int ARM_BOTTOM = 816;
 
     public static double BOX_DOWN_POSITION = 0;
     public static double BOX_UP_POSITION = 0;
@@ -71,6 +73,9 @@ public class Mechanisms {
         rightDuck = hardwareMap.get(CRServo.class, "rightDuck");
 
         box = hardwareMap.get(Servo.class, "box");
+
+        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -91,23 +96,23 @@ public class Mechanisms {
 
 
     public void runDuckSpin(duckSpinState state, duckSpinSide side) {
-     if(state == duckSpinState.ON) {
-         if (side == duckSpinSide.LEFT) {
-             spin(state,leftDuck);
-         }
-
-         if (side == duckSpinSide.RIGHT) {
-             spin(state,rightDuck);
-         }
-     }
-
-        if(state == duckSpinState.OFF) {
+        if (state == duckSpinState.ON) {
             if (side == duckSpinSide.LEFT) {
-                spin(state,leftDuck);
+                spin(state, leftDuck);
             }
 
             if (side == duckSpinSide.RIGHT) {
-                spin(state,rightDuck);
+                spin(state, rightDuck);
+            }
+        }
+
+        if (state == duckSpinState.OFF) {
+            if (side == duckSpinSide.LEFT) {
+                spin(state, leftDuck);
+            }
+
+            if (side == duckSpinSide.RIGHT) {
+                spin(state, rightDuck);
             }
         }
     }
@@ -118,7 +123,7 @@ public class Mechanisms {
                 servo.setPower(SPIN_POWER);
                 break;
             case OFF:
-                servo.setPower(SPIN_POWER);
+                servo.setPower(OFF_POWER);
                 break;
         }
     }
@@ -127,23 +132,33 @@ public class Mechanisms {
         switch (state) {
             case FRONT:
                 runTurretPosition(TURRET_FRONT);
+                break;
             case RIGHT:
                 runTurretPosition(TURRET_RIGHT);
+                break;
             case BACK:
                 runTurretPosition(TURRET_BACK);
+                break;
             case LEFT:
                 runTurretPosition(TURRET_LEFT);
+                break;
         }
     }
 
     public void moveArm(armState state) {
         switch (state) {
-            case DOWN:
-            case RESET:
-                runArmPosition(ARM_DOWN);
-            case UP:
-            case BACK:
-                runArmPosition(ARM_UP);
+            case INITIAL:
+                runArmPosition(ARM_INITIAL);
+                break;
+            case TOP:
+                runArmPosition(ARM_TOP);
+                break;
+            case MIDDLE:
+                runArmPosition(ARM_MIDDLE);
+                break;
+            case BOTTOM:
+                runArmPosition(ARM_BOTTOM);
+                break;
         }
     }
 
@@ -157,9 +172,6 @@ public class Mechanisms {
     }
 
     private void runTurretPosition(int ticks) {
-//        turret.setTargetPosition(ticks);
-//        turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        turret.setVelocity(TURRET_VELOCITY);
         runToPosition(ticks, turret, TURRET_VELOCITY);
     }
 
