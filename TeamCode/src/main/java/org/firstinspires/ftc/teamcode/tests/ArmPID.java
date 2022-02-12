@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
-@TeleOp(name="ArmPID")
+@TeleOp(name = "ArmPID")
 public class ArmPID extends LinearOpMode {
 
     DcMotorEx arm;
@@ -19,13 +19,15 @@ public class ArmPID extends LinearOpMode {
     double integral = 0;
     double repetitions = 0;
 
-    public static PIDCoefficients armPID = new PIDCoefficients(0,0,0);
+    public static PIDCoefficients armPID = new PIDCoefficients(0.00005, 0.000001, 0.000001);
 
     ElapsedTime PIDTimer = new ElapsedTime();
 
     public static double TARGET_POS = 140;
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
+
+    public double setPID = 0;
 
     @Override
     public void runOpMode() {
@@ -43,19 +45,20 @@ public class ArmPID extends LinearOpMode {
         telemetry.clearAll();
 
         waitForStart();
-        while(opModeIsActive()) {
-            if(gamepad1.a) {
+        while (opModeIsActive()) {
+            if (gamepad1.a) {
                 moveArm(TARGET_POS);
             }
 
-            if(gamepad1.b) {
+            if (gamepad1.b) {
                 moveArm(0);
             }
 
-            telemetry.addData("targetPosition",TARGET_POS);
+            telemetry.addData("targetPosition", TARGET_POS);
             telemetry.addData("measuredPosition", arm.getCurrentPosition());
             telemetry.addData("error", TARGET_POS - arm.getCurrentPosition());
-            
+            telemetry.addData("set", setPID);
+            telemetry.addData("repetitions", repetitions);
             telemetry.update();
         }
     }
@@ -64,18 +67,18 @@ public class ArmPID extends LinearOpMode {
         double error = arm.getCurrentPosition();
         double lastError = 0;
 
-        while(Math.abs(error) <= 10 && repetitions < 40) {
+        while (Math.abs(error) <= 10 && repetitions < 500) {
             error = arm.getCurrentPosition() - targetPosition;
             double changeInError = lastError - error;
 
             integral += changeInError * PIDTimer.time();
-            double derivative = changeInError/PIDTimer.time();
+            double derivative = changeInError / PIDTimer.time();
 
             double P = armPID.p * error;
             double I = armPID.i * integral;
             double D = armPID.d * derivative;
-
-            arm.setPower(P+I+D);
+            setPID = P + I + D;
+            arm.setPower(P + I + D);
             error = lastError;
             repetitions++;
             PIDTimer.reset();
