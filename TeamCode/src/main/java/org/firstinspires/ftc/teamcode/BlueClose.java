@@ -54,18 +54,17 @@ public class BlueClose extends LinearOpMode {
         if (opModeIsActive()) {
             Trajectory MidToWarehouse = drive.trajectoryBuilder(startPose)
                     .lineToConstantHeading(new Vector2d(WAREHOUSE_X, WAREHOUSE_Y))
-                    .addDisplacementMarker(() -> {
-
+                    .addDisplacementMarker(30, () -> {
+                        mech.runIntake(Mechanisms.intakeState.IN);
                     })
                     .build();
 
 
-
             Trajectory WarehouseToMid = drive.trajectoryBuilder(MidToWarehouse.end())
-                    .lineToConstantHeading(new Vector2d(MID_X, MID_Y))
                     .addDisplacementMarker(() -> {
-
+                        mech.runIntake(Mechanisms.intakeState.OFF);
                     })
+                    .lineToConstantHeading(new Vector2d(MID_X, MID_Y))
                     .build();
 
             Trajectory MidToShipping = drive.trajectoryBuilder(WarehouseToMid.end())
@@ -78,7 +77,8 @@ public class BlueClose extends LinearOpMode {
             Trajectory ShippingToMid = drive.trajectoryBuilder(MidToShipping.end())
                     .lineToLinearHeading(new Pose2d(MID_X, MID_Y, Math.toRadians(0)))
                     .addDisplacementMarker(() -> {
-
+                        mech.moveArm(Mechanisms.armState.TOP);
+                        // add box
                     })
                     .build();
 
@@ -88,21 +88,29 @@ public class BlueClose extends LinearOpMode {
 
             Trajectory MidToWarehouse2 = drive.trajectoryBuilder(ShippingToMid.end())
                     .lineToConstantHeading(new Vector2d(WAREHOUSE_X, WAREHOUSE_Y))
-                    .addDisplacementMarker(() -> {
-
+                    .addDisplacementMarker(30, () -> {
+                        mech.runIntake(Mechanisms.intakeState.IN);
                     })
                     .build();
 
+            Trajectory ParkInWareHouse = drive.trajectoryBuilder(StrafeLeft.end())
+                    .lineToConstantHeading(new Vector2d(WAREHOUSE_X, WAREHOUSE_Y-20))
+                    .addDisplacementMarker(30, () -> {
+                        mech.runIntake(Mechanisms.intakeState.IN);
+                    })
+                    .build();
+
+
             //Cycle One
-            drive.followTrajectory(MidToWarehouse);
+            drive.followTrajectory(MidToWarehouse); // from start to warehouse
             mech.wait(2000);
-            drive.followTrajectory(WarehouseToMid);
-            drive.followTrajectory(MidToShipping);
+            drive.followTrajectory(WarehouseToMid); // from warehouse to start
+            drive.followTrajectory(MidToShipping); // start to ship
             mech.wait(2000);
 
             //Reset to mid
-            drive.followTrajectory(ShippingToMid);
-            drive.followTrajectory(StrafeLeft);
+            drive.followTrajectory(ShippingToMid); // ship to start
+            drive.followTrajectory(StrafeLeft); // correction
 
             //Cycle Two
             drive.followTrajectory(MidToWarehouse2);
@@ -110,6 +118,13 @@ public class BlueClose extends LinearOpMode {
             drive.followTrajectory(WarehouseToMid);
             drive.followTrajectory(MidToShipping);
             mech.wait(2000);
+
+            // Reset to mid
+            drive.followTrajectory(ShippingToMid); // ship to start
+            drive.followTrajectory(StrafeLeft); // correction
+
+            // Park
+            drive.followTrajectory(ParkInWareHouse);
         }
 
     }
