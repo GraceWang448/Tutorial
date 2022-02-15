@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -29,7 +30,7 @@ public class Mechanisms {
     }
 
     public enum armState {
-     INITIAL,TOP,MIDDLE,BOTTOM
+        INITIAL, TOP, MIDDLE, BOTTOM, BOTTOM_APPROACH
     }
 
     public enum boxState {
@@ -56,12 +57,13 @@ public class Mechanisms {
     public static int TURRET_BACK = -537;
 
     public static int ARM_INITIAL = 0;
-    public static int ARM_TOP = 614;
-    public static int ARM_MIDDLE = 748;
-    public static int ARM_BOTTOM = 816;
+    public static int ARM_TOP = 520;
+    public static int ARM_MIDDLE = 690;
+    public static int ARM_BOTTOM = 760;
 
-    public static double BOX_DOWN_POSITION = 0;
-    public static double BOX_UP_POSITION = 0;
+    public static double BOX_INITIAL = 0.475;
+    public static double BOX_UP = 0;
+    public static double BOX_DOWN = 0.75;
 
     public Mechanisms(HardwareMap hardwareMap) {
 
@@ -79,6 +81,8 @@ public class Mechanisms {
 
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftDuck.setDirection(CRServo.Direction.REVERSE);
     }
 
     public void runIntake(intakeState state) {
@@ -92,6 +96,10 @@ public class Mechanisms {
             case OFF:
                 intake.setPower(OFF_POWER);
         }
+    }
+
+    public double getArmVelocity() {
+        return arm.getVelocity();
     }
 
 
@@ -148,7 +156,7 @@ public class Mechanisms {
     public void moveArm(armState state) {
         switch (state) {
             case INITIAL:
-                runArmPosition(ARM_INITIAL);
+                runToPosition(ARM_INITIAL, arm, 800);
                 break;
             case TOP:
                 runArmPosition(ARM_TOP);
@@ -159,16 +167,30 @@ public class Mechanisms {
             case BOTTOM:
                 runArmPosition(ARM_BOTTOM);
                 break;
+            case BOTTOM_APPROACH:
+                runArmPosition(250);
+                break;
         }
     }
 
-    public void moveBox(boxState state) {
-        switch (state) {
-            case DOWN:
-                box.setPosition(BOX_DOWN_POSITION);
-            case UP:
-                box.setPosition(BOX_UP_POSITION);
-        }
+    public void setBoxPosition(double position) {
+        box.setPosition(position);
+    }
+
+    public double getArmPosition() {
+        return arm.getCurrentPosition();
+    }
+
+    public double getBoxPosition() {
+        return box.getPosition();
+    }
+
+    public void startBox() {
+        box.setPosition(0);
+    }
+
+    public void dropBox() {
+        box.setPosition(BOX_INITIAL);
     }
 
     private void runTurretPosition(int ticks) {

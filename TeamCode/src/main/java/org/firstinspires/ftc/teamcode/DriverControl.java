@@ -24,9 +24,15 @@ public class DriverControl extends LinearOpMode {
 
         telemetry.addLine("Ready to start");
         telemetry.update();
+        telemetry.clearAll();
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
+
+            telemetry.addData("armv",mech.getArmVelocity());
+            telemetry.addData("arm",mech.getArmPosition());
+            telemetry.addData("box",mech.getBoxPosition());
+            telemetry.update();
 
             // Gamepad 1 - Drivetrain
             drive.setWeightedDrivePower(
@@ -42,6 +48,7 @@ public class DriverControl extends LinearOpMode {
             } else {
                 mech.runIntake(Mechanisms.intakeState.OFF);
             }
+              nmk
             if (gamepad1.b) {
                 mech.runIntake(Mechanisms.intakeState.OUT);
             } else {
@@ -85,9 +92,42 @@ public class DriverControl extends LinearOpMode {
             if(gamepad2.x) {
                 mech.moveArm(Mechanisms.armState.MIDDLE);
             }
-
+//            if(gamepad2.left_bumper) {
+//                mech.moveBox(Mechanisms.boxState.UP);
+//            }
+//            if(gamepad2.right_bumper) {
+//                mech.moveBox(Mechanisms.boxState.DOWN);
+//            }
             if(gamepad2.b) {
                 mech.moveArm(Mechanisms.armState.BOTTOM);
+            }
+
+            if(gamepad2.right_stick_button) {
+                mech.moveArm(Mechanisms.armState.BOTTOM_APPROACH);
+            }
+
+            if(gamepad2.left_bumper) {
+                mech.dropBox();
+            }
+
+            if(gamepad2.right_bumper) {
+                mech.startBox();
+            }
+
+            if (mech.getArmVelocity() > 0) {
+                if (mech.getArmPosition() < 25) {
+                    mech.setBoxPosition(Mechanisms.BOX_INITIAL);
+                } else if (mech.getArmPosition() < 100) {
+                    mech.setBoxPosition(Mechanisms.BOX_INITIAL-0.175);
+                } else if (mech.getArmPosition() < 575 && mech.getArmPosition() > 315) {
+                    mech.setBoxPosition(0);
+                }
+            }
+
+            if (mech.getArmVelocity() < 0) {
+                if (mech.getArmPosition() < 315 && mech.getArmPosition() > 100) {
+                    mech.setBoxPosition(Mechanisms.BOX_INITIAL - 0.175);
+                }
             }
 
         }

@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
-@Disabled
 @TeleOp
 public class ArmTesting extends LinearOpMode {
 

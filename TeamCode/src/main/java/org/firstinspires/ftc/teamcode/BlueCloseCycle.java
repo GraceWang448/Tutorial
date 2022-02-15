@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.nextcore.Mechanisms;
 import java.util.List;
 
 @Config
-@Autonomous(name = "A - BlueClose")
-public class BlueClose extends LinearOpMode {
+@Autonomous(name = "A - BlueCloseCycle")
+public class BlueCloseCycle extends LinearOpMode {
 
     // RED SPECIFIC DATA
     public static double BLUE_STARTING_X = 12;
@@ -79,6 +79,8 @@ public class BlueClose extends LinearOpMode {
                     .addDisplacementMarker(() -> {
                         mech.moveArm(Mechanisms.armState.TOP);
                         // add box
+                        //mech.moveBox(Mechanisms.boxState.UP); (0)
+                        //mech.moveBox(Mechanisms.boxState.DOWN); (1)
                     })
                     .build();
 
@@ -103,10 +105,10 @@ public class BlueClose extends LinearOpMode {
 
             //Cycle One
             drive.followTrajectory(MidToWarehouse); // from start to warehouse
-            mech.wait(2000);
+            mech.wait(1000);
             drive.followTrajectory(WarehouseToMid); // from warehouse to start
             drive.followTrajectory(MidToShipping); // start to ship
-            mech.wait(2000);
+            mech.wait(1000);
 
             //Reset to mid
             drive.followTrajectory(ShippingToMid); // ship to start
@@ -114,10 +116,10 @@ public class BlueClose extends LinearOpMode {
 
             //Cycle Two
             drive.followTrajectory(MidToWarehouse2);
-            mech.wait(2000);
+            mech.wait(1000);
             drive.followTrajectory(WarehouseToMid);
             drive.followTrajectory(MidToShipping);
-            mech.wait(2000);
+            mech.wait(1000);
 
             // Reset to mid
             drive.followTrajectory(ShippingToMid); // ship to start
